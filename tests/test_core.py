@@ -5,7 +5,7 @@ from sentence2pronunciation.core import (add_pronunciation_for_splitted_word,
                                          get_annotation_content,
                                          get_non_annotated_words,
                                          is_annotation,
-                                         not_annotation_word2pronunciation,
+                                         get_word_pronunciations,
                                          pronunciation_list_to_pronunciation,
                                          remove_trim_symbols_at_beginning,
                                          remove_trim_symbols_at_end,
@@ -421,14 +421,14 @@ def test_not_annotation_word2pronunciation():
   word = ("!", "(", "hel", "lo", "(", "!")
   trim_symbols = {"!", "("}
   split_on_hyphen = True
-  res = not_annotation_word2pronunciation(
+  res = get_word_pronunciations(
     word, trim_symbols, split_on_hyphen, get_pronunciation_with_dict)
 
   assert res == ("!", "(", "hel", "lo", "(", "!")
 
 
 def test_not_annotation_word2pronunciation__no_begin_trim():
-  res = not_annotation_word2pronunciation(
+  res = get_word_pronunciations(
     word=("a", "!"),
     trim_symbols={"!"},
     split_on_hyphen=False,
@@ -439,7 +439,7 @@ def test_not_annotation_word2pronunciation__no_begin_trim():
 
 
 def test_not_annotation_word2pronunciation__no_end_trim():
-  res = not_annotation_word2pronunciation(
+  res = get_word_pronunciations(
     word=("!", "a"),
     trim_symbols={"!"},
     split_on_hyphen=False,
@@ -450,7 +450,7 @@ def test_not_annotation_word2pronunciation__no_end_trim():
 
 
 def test_not_annotation_word2pronunciation__no_begin_and_no_end_trim():
-  res = not_annotation_word2pronunciation(
+  res = get_word_pronunciations(
     word=("a",),
     trim_symbols={"!"},
     split_on_hyphen=False,
@@ -461,7 +461,7 @@ def test_not_annotation_word2pronunciation__no_begin_and_no_end_trim():
 
 
 def test_not_annotation_word2pronunciation__only_trim():
-  res = not_annotation_word2pronunciation(
+  res = get_word_pronunciations(
     word=("!",),
     trim_symbols={"!"},
     split_on_hyphen=False,

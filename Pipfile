@@ -4,6 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+iterable-serialization = {editable = true, path = "./../iterable-serialization"}
 tqdm = "*"
 ordered-set = "*"
 
