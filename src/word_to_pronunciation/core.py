@@ -9,8 +9,8 @@ from ordered_set import OrderedSet
 from word_to_pronunciation.annotation_handling import (
     get_pronunciations_from_annotation, is_annotation)
 from word_to_pronunciation.types import (Annotation, LookupMethod,
-                                         Pronunciation, Pronunciations,
-                                         Symbol, Symbols, Word)
+                                         Pronunciation, Pronunciations, Symbol,
+                                         Symbols, Word)
 from word_to_pronunciation.utils import separate_symbols, symbols_join
 
 HYPHEN = "-"
@@ -42,9 +42,9 @@ def word2pronunciation(word: Word, lookup: LookupMethod, options: Options) -> Pr
     trim_beginning, word, trim_end = separate_symbols(word, options.trim_symbols)
     if word == "":
       pronunciation = tuple(trim_beginning + trim_end)
-      result = OrderedDict(
+      result = OrderedDict((
         (pronunciation, 1.0),
-      )
+      ))
       return result
 
   if options.split_on_hyphen:
