@@ -5,10 +5,6 @@ from multiprocessing import Manager
 from multiprocessing.managers import SyncManager
 from typing import List, cast
 
-from sentence2pronunciation.lookup_cache import (
-    get_empty_cache, lookup_in_cache_and_add_if_missing,
-    lookup_in_cache_and_add_if_missing_mp, pronunciation_upper)
-
 
 def get_pron(x, l: List) -> str:
   l.append(x)

@@ -1,5 +1,5 @@
 from ordered_set import OrderedSet
-from sentence2pronunciation.core import sentences2pronunciations_from_cache
+from word_to_pronunciation.core import *
 
 
 def test_component():

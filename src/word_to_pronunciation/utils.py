@@ -1,8 +1,8 @@
 from typing import Generator, List, Set, Tuple
 
-from sentence2pronunciation.types import (Annotation, LookupMethod,
-                                          Pronunciation, Pronunciations,
-                                          Symbol, Symbols, Word)
+from word_to_pronunciation.types import (Annotation, LookupMethod,
+                                         Pronunciation, Pronunciations,
+                                         Symbol, Symbols, Word)
 
 
 def pronunciation_upper(pronunciation: Pronunciation) -> Pronunciation:

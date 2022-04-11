@@ -1,1 +1,1 @@
-# sentence2pronunciation
+# word_to_pronunciation

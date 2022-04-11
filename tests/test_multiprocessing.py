@@ -4,9 +4,7 @@ from logging import getLogger
 from multiprocessing import Pool
 from typing import Tuple
 
-from sentence2pronunciation.multiprocessing import (
-    prepare_cache_mp, sentences2pronunciations_from_cache_mp)
-from sentence2pronunciation.types import Pronunciation
+from word_to_pronunciation.types import Pronunciation
 
 
 def get_pronunciation_added_X(x: Pronunciation):

@@ -1,22 +1,6 @@
 import pytest
-from sentence2pronunciation.core import (add_pronunciation_for_splitted_word,
-                                         add_pronunciation_for_word,
-                                         annotation2pronunciation,
-                                         get_annotation_content,
-                                         get_non_annotated_words,
-                                         is_annotation,
-                                         get_word_pronunciations,
-                                         pronunciation_list_to_pronunciation,
-                                         remove_trim_symbols_at_beginning,
-                                         remove_trim_symbols_at_end,
-                                         sentence2pronunciation,
-                                         sentence2pronunciation_cached,
-                                         symbols_split_iterable,
-                                         symbols_join, trim_word,
-                                         word2pronunciation,
-                                         word2pronunciation_cached)
-from sentence2pronunciation.lookup_cache import get_empty_cache
-from sentence2pronunciation.types import Pronunciation
+from word_to_pronunciation.core import *
+from word_to_pronunciation.types import Pronunciation
 
 HYPHEN = "-"
 
@@ -536,11 +520,11 @@ def test_word2pronunciation__word_is_not_annotation():
 
 # endregion
 
-# region sentence2pronunciation_cached
+# region word_to_pronunciation_cached
 
 
-def test_sentence2pronunciation_cached__dont_ignore_case():
-  result = sentence2pronunciation_cached(
+def test_word_to_pronunciation_cached__dont_ignore_case():
+  result = word_to_pronunciation_cached(
     sentence=tuple("a A /ab/ A-a?"),
     annotation_split_symbol="/",
     consider_annotation=True,
@@ -554,8 +538,8 @@ def test_sentence2pronunciation_cached__dont_ignore_case():
   assert result == ("aa", " ", "AA", " ", "ab", " ", "AA", "-", "aa", "?")
 
 
-def test_sentence2pronunciation_cached__ignore_case__ignores_case():
-  result = sentence2pronunciation_cached(
+def test_word_to_pronunciation_cached__ignore_case__ignores_case():
+  result = word_to_pronunciation_cached(
     sentence=tuple("a A /ab/ A-a?"),
     annotation_split_symbol="/",
     consider_annotation=True,
@@ -604,11 +588,11 @@ def test_word2pronunciation_cached__ignore_case__ignores_case():
 
 # endregion
 
-# region sentence2pronunciation
+# region word_to_pronunciation
 
 
-def test_sentence2pronunciation__spare_split_symbol__does_not_trigger_get_pronunciation():
-  result = sentence2pronunciation(
+def test_word_to_pronunciation__spare_split_symbol__does_not_trigger_get_pronunciation():
+  result = word_to_pronunciation(
     sentence=("w", " ", "?"),
     trim_symbols={"?"},
     split_on_hyphen=False,
@@ -620,7 +604,7 @@ def test_sentence2pronunciation__spare_split_symbol__does_not_trigger_get_pronun
   assert result == ("x", " ", "?")
 
 
-def test_sentence2pronunciation__consider_annotation_is_true__annotation_split_symbol_has_len_2():
+def test_word_to_pronunciation__consider_annotation_is_true__annotation_split_symbol_has_len_2():
   consider_annotation = True
   sentence = ("/", "hello", "/", " ", "world")
   trim_symbols = {"!"}
@@ -628,11 +612,11 @@ def test_sentence2pronunciation__consider_annotation_is_true__annotation_split_s
   annotation_split_symbol = "//"
 
   with pytest.raises(ValueError):
-    sentence2pronunciation(sentence, trim_symbols, split_on_hyphen, get_pronunciation_with_dict,
-                           consider_annotation, annotation_split_symbol)
+    word_to_pronunciation(sentence, trim_symbols, split_on_hyphen, get_pronunciation_with_dict,
+                          consider_annotation, annotation_split_symbol)
 
 
-def test_sentence2pronunciation__consider_annotation_is_true__annotation_split_symbol_has_len_0():
+def test_word_to_pronunciation__consider_annotation_is_true__annotation_split_symbol_has_len_0():
   consider_annotation = True
   sentence = ("/", "hello", "/", " ", "world")
   trim_symbols = {"!"}
@@ -640,71 +624,71 @@ def test_sentence2pronunciation__consider_annotation_is_true__annotation_split_s
   annotation_split_symbol = ""
 
   with pytest.raises(ValueError):
-    sentence2pronunciation(sentence, trim_symbols, split_on_hyphen, get_pronunciation_with_dict,
-                           consider_annotation, annotation_split_symbol)
+    word_to_pronunciation(sentence, trim_symbols, split_on_hyphen, get_pronunciation_with_dict,
+                          consider_annotation, annotation_split_symbol)
 
 
-def test_sentence2pronunciation__single_word():
+def test_word_to_pronunciation__single_word():
   sentence = ("hello",)
   trim_symbols = {"!"}
   split_on_hyphen = True
   consider_annotation = True
   annotation_split_symbol = "/"
 
-  res = sentence2pronunciation(sentence, trim_symbols, split_on_hyphen,
-                               get_pronunciation, consider_annotation, annotation_split_symbol)
+  res = word_to_pronunciation(sentence, trim_symbols, split_on_hyphen,
+                              get_pronunciation, consider_annotation, annotation_split_symbol)
 
   assert res == ("hello",)
 
 
-def test_sentence2pronunciation__two_words():
+def test_word_to_pronunciation__two_words():
   sentence = ("hello", " ", "world")
   trim_symbols = {"!"}
   split_on_hyphen = True
   consider_annotation = True
   annotation_split_symbol = "/"
 
-  res = sentence2pronunciation(sentence, trim_symbols, split_on_hyphen,
-                               get_pronunciation, consider_annotation, annotation_split_symbol)
+  res = word_to_pronunciation(sentence, trim_symbols, split_on_hyphen,
+                              get_pronunciation, consider_annotation, annotation_split_symbol)
 
   assert res == ("hello", " ", "world")
 
 
-def test_sentence2pronunciation__single_annotation():
+def test_word_to_pronunciation__single_annotation():
   sentence = ("/", "hello", "/")
   trim_symbols = {"!"}
   split_on_hyphen = True
   consider_annotation = True
   annotation_split_symbol = "/"
 
-  res = sentence2pronunciation(sentence, trim_symbols, split_on_hyphen,
-                               get_pronunciation, consider_annotation, annotation_split_symbol)
+  res = word_to_pronunciation(sentence, trim_symbols, split_on_hyphen,
+                              get_pronunciation, consider_annotation, annotation_split_symbol)
 
   assert res == ("hello",)
 
 
-def test_sentence2pronunciation__one_word_and_one_annotation():
+def test_word_to_pronunciation__one_word_and_one_annotation():
   sentence = ("hello", " ", "/", "world", "/")
   trim_symbols = {"!"}
   split_on_hyphen = True
   consider_annotation = True
   annotation_split_symbol = "/"
 
-  res = sentence2pronunciation(sentence, trim_symbols, split_on_hyphen,
-                               get_pronunciation, consider_annotation, annotation_split_symbol)
+  res = word_to_pronunciation(sentence, trim_symbols, split_on_hyphen,
+                              get_pronunciation, consider_annotation, annotation_split_symbol)
 
   assert res == ("hello", " ", "world")
 
 
-def test_sentence2pronunciation__one_word_and_one_annotation_separate_symbols():
+def test_word_to_pronunciation__one_word_and_one_annotation_separate_symbols():
   sentence = ("hello", " ", "/", "w", "o", "r", "l", "d", "/")
   trim_symbols = {"!"}
   split_on_hyphen = True
   consider_annotation = True
   annotation_split_symbol = "/"
 
-  res = sentence2pronunciation(sentence, trim_symbols, split_on_hyphen,
-                               get_pronunciation, consider_annotation, annotation_split_symbol)
+  res = word_to_pronunciation(sentence, trim_symbols, split_on_hyphen,
+                              get_pronunciation, consider_annotation, annotation_split_symbol)
 
   assert res == ("hello", " ", "world")
 

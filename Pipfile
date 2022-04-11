@@ -9,7 +9,7 @@ tqdm = "*"
 ordered-set = "*"
 
 [dev-packages]
-sentence2pronunciation = {editable = true, path = "."}
+word-to-pronunciation = {editable = true, path = "."}
 autopep8 = "*"
 pylint = "*"
 pycodestyle = "*"

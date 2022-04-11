@@ -2,9 +2,9 @@ from collections import OrderedDict
 
 from iterable_serialization import deserialize_iterable
 
-from sentence2pronunciation.types import (Annotation, LookupMethod,
-                                          Pronunciation, Pronunciations,
-                                          Symbol, Symbols, Word)
+from word_to_pronunciation.types import (Annotation, LookupMethod,
+                                         Pronunciation, Pronunciations,
+                                         Symbol, Symbols, Word)
 
 
 def is_annotation(word: Word, annotation_split_symbol: Symbol) -> bool:
