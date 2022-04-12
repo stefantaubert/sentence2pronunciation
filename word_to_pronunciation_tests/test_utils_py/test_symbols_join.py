@@ -2,7 +2,7 @@ from word_to_pronunciation.utils import symbols_join
 
 
 def test_empty__X__returns_empty():
-  result = symbols_join([], "X")
+  result = tuple(symbols_join([], "X"))
   assert result == tuple()
 
 

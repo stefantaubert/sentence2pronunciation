@@ -26,17 +26,16 @@ def test_component():
 
 def test_empty():
   result = merge_pronunciations([], 0.5)
-  assert len(result) == 0
+  assert result == OrderedDict()
 
 
-def test_None__returns_empty__default_weight():
+def test_None__returns_empty():
+  # could not occur in application
   parts = [
     None,
   ]
   result = merge_pronunciations(parts, 0.5)
-  assert result == OrderedDict((
-    (tuple(), 0.5),
-  ))
+  assert result == OrderedDict()
 
 
 def test_None_None__returns_hyphen__default_weight():

@@ -150,6 +150,8 @@ def merge_pronunciations(parts: List[Optional[Pronunciations]], default_weight: 
   matrix = get_matrix(parts)
   for pronunciation_parts, weight in zip(get_pronunciations(matrix), get_weights(matrix)):
     joined_parts = tuple(symbols_join(pronunciation_parts, HYPHEN))
+    if len(joined_parts) == 0:
+      continue
     if weight is None:
       weight = default_weight
     result[joined_parts] = weight
