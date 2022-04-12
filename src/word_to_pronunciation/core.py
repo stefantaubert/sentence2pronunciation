@@ -1,15 +1,8 @@
 from collections import OrderedDict
 from dataclasses import dataclass
-from functools import partial
-from typing import (Callable, Dict, Generator, Iterable, Iterator, List,
-                    Optional, Set, Tuple)
+from typing import List, Optional
 
-from ordered_set import OrderedSet
-
-from word_to_pronunciation.annotation_handling import (
-    get_pronunciations_from_annotation, is_annotation)
-from word_to_pronunciation.types import (Annotation, LookupMethod,
-                                         Pronunciation, Pronunciations, Symbol,
+from word_to_pronunciation.types import (LookupMethod, Pronunciations, Symbol,
                                          Symbols, Word)
 from word_to_pronunciation.utils import separate_symbols, symbols_join
 
@@ -20,11 +13,10 @@ HYPHEN = "-"
 class Options():
   trim_symbols: Symbols
   split_on_hyphen: bool
-  consider_annotation: bool
-  annotation_split_symbol: Optional[Symbol]
   try_without_trimming: bool
   try_without_splitting: bool
-  # use this weight for annotations and words consisting only of trim_symbols
+  # use this weight for words consisting only of trim_symbols
+  # only relevant if trim_symbols is not empty
   default_weight: Optional[float]
 
 
@@ -32,18 +24,8 @@ def word2pronunciation(word: Word, lookup: LookupMethod, options: Options) -> Pr
   assert isinstance(word, str)
   assert isinstance(options, Options)
 
-  if options.consider_annotation:
-    assert options.annotation_split_symbol is not None
-    assert options.default_weight is not None
-
   if word == "":
     return OrderedDict()
-
-  if options.consider_annotation and is_annotation(word, options.annotation_split_symbol):
-    annotation = word
-    result = get_pronunciations_from_annotation(
-      annotation, options.annotation_split_symbol, options.default_weight)
-    return result
 
   if len(options.trim_symbols) > 0 and options.try_without_trimming:
     lookup_result = lookup(word)
@@ -85,7 +67,7 @@ def word2pronunciation(word: Word, lookup: LookupMethod, options: Options) -> Pr
         if len(lookup_result) == 0:
           return lookup_result
         resulting_pronunciations.append(lookup_result)
-    result = merge_pronunciations_together(resulting_pronunciations)
+    lookup_result = merge_pronunciations_together(resulting_pronunciations)
   else:
     lookup_result = lookup(word_core)
 
@@ -114,18 +96,28 @@ def merge_pronunciations_together(parts: List[Optional[Pronunciations]]) -> Pron
     new_tmp = []
     new_weights = []
     if part is None:
-      for entry in tmp:
-        new_entry = entry + [tuple()]
+      if len(tmp) == 0:
+        new_entry = [tuple()]
         new_tmp.append(new_entry)
-      tmp = new_tmp
+        tmp = new_tmp
+      else:
+        for entry in tmp:
+          new_entry = entry + [tuple()]
+          new_tmp.append(new_entry)
+        tmp = new_tmp
     else:
       assert len(part) > 0
-      for entry, weight in zip(tmp, weights):
+      if len(tmp) == 0:
         for entry2, weight2 in part.items():
-          new_entry = entry + list(entry2)
-          new_weight = weight * weight2
-        new_tmp.append(new_entry)
-        new_weights.append(new_weight)
+          new_tmp.append(list(entry2))
+          new_weights.append(weight2)
+      else:
+        for entry, weight in zip(tmp, weights):
+          for entry2, weight2 in part.items():
+            new_entry = [entry] + [list(entry2)]
+            new_weight = weight * weight2
+          new_tmp.append(new_entry)
+          new_weights.append(new_weight)
       tmp = new_tmp
       weights = new_weights
   assert len(tmp) == len(weights)
@@ -133,5 +125,5 @@ def merge_pronunciations_together(parts: List[Optional[Pronunciations]]) -> Pron
     symbols_join(entry, HYPHEN)
     for entry in tmp
   )
-  result = OrderedDict(zip(tmp, weights))
+  result = OrderedDict(zip(new_tmp, weights))
   return result

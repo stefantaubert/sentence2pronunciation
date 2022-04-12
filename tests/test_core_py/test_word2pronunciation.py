@@ -1,4 +1,3 @@
-
 from collections import OrderedDict
 
 from word_to_pronunciation.core import Options, word2pronunciation
@@ -17,37 +16,37 @@ def dummy_lookup(word: str) -> Pronunciations:
 
 def test_empty_empty__returns_empty():
   word = ""
-  options = Options("", False, False, False, False, False)
+  options = Options("", False, False, False, 1.0)
   result = word2pronunciation(word, dummy_lookup, options)
   assert len(result) == 0
 
 
 def test_a_empty__returns_aa():
   word = "a"
-  options = Options("", False, False, False, False, False)
+  options = Options("", False, False, False, 1.0)
   result = word2pronunciation(word, dummy_lookup, options)
   assert len(result) == 1
   assert result[("aa",)] == 1.0
 
 
 def test_empty_X__returns_empty():
+  word = ""
+  options = Options("X", False, False, False, 1.0)
+  result = word2pronunciation(word, dummy_lookup, options)
+  assert len(result) == 0
+
+
+def test_X_X__returns_X():
   word = "X"
-  options = Options("X", False, False, False, False, False)
+  options = Options("X", False, False, False, 1.0)
   result = word2pronunciation(word, dummy_lookup, options)
   assert len(result) == 1
   assert result[("X",)] == 1.0
 
 
-def test_X_X__returns_X():
-  word = ""
-  options = Options("X", False, False, False, False, False)
-  result = word2pronunciation(word, dummy_lookup, options)
-  assert len(result) == 0
-
-
 def test_aa__returns_aa_aa():
   word = "aa"
-  options = Options("", False, False, False, False, False)
+  options = Options("", False, False, False, 1.0)
   result = word2pronunciation(word, dummy_lookup, options)
   assert len(result) == 1
   assert result[("aa", "aa")] == 1.0
@@ -55,7 +54,7 @@ def test_aa__returns_aa_aa():
 
 def test_aX_X__returns_aa_X():
   word = "aX"
-  options = Options("X", False, False, False, False, False)
+  options = Options("X", False, False, False, 1.0)
   result = word2pronunciation(word, dummy_lookup, options)
   assert len(result) == 1
   assert result[("aa", "X")] == 1.0
@@ -63,7 +62,7 @@ def test_aX_X__returns_aa_X():
 
 def test_aaX_X__returns_aa_aa_X():
   word = "aaX"
-  options = Options("X", False, False, False, False, False)
+  options = Options("X", False, False, False, 1.0)
   result = word2pronunciation(word, dummy_lookup, options)
   assert len(result) == 1
   assert result[("aa", "aa", "X")] == 1.0

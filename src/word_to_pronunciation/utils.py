@@ -1,9 +1,7 @@
 import re
-from typing import Generator, List, Set, Tuple
+from typing import List, Tuple
 
-from word_to_pronunciation.types import (Annotation, LookupMethod,
-                                         Pronunciation, Pronunciations, Symbol,
-                                         Symbols, Word)
+from word_to_pronunciation.types import Pronunciation, Symbol, Symbols, Word
 
 
 def symbols_join(list_of_pronunciations: List[Pronunciation], join_symbol: Symbol) -> None:
