@@ -1,9 +1,11 @@
 from collections import OrderedDict
 from dataclasses import dataclass
-from typing import List, Optional
+from logging import getLogger
+from typing import Generator, List, Optional, Tuple
 
-from word_to_pronunciation.types import (LookupMethod, Pronunciations, Symbol,
-                                         Symbols, Word)
+from word_to_pronunciation.types import (LookupMethod, Pronunciation,
+                                         Pronunciations, Symbol, Symbols,
+                                         Weight, Word)
 from word_to_pronunciation.utils import separate_symbols, symbols_join
 
 HYPHEN = "-"
@@ -65,9 +67,11 @@ def word2pronunciation(word: Word, lookup: LookupMethod, options: Options) -> Pr
       else:
         lookup_result = lookup(w)
         if len(lookup_result) == 0:
-          return lookup_result
+          # or add None for ignoring that no result was returned
+          return OrderedDict()
         resulting_pronunciations.append(lookup_result)
-    lookup_result = merge_pronunciations_together(resulting_pronunciations)
+    lookup_result = merge_pronunciations(
+      resulting_pronunciations, options.default_weight)
   else:
     lookup_result = lookup(word_core)
 
@@ -89,41 +93,64 @@ def join_begin_and_end(pronunciations: Pronunciations, beginning: str, end: str)
   return result
 
 
-def merge_pronunciations_together(parts: List[Optional[Pronunciations]]) -> Pronunciations:
-  tmp: List[Symbol] = []
-  weights = []
-  for part in parts:
-    new_tmp = []
-    new_weights = []
-    if part is None:
-      if len(tmp) == 0:
-        new_entry = [tuple()]
-        new_tmp.append(new_entry)
-        tmp = new_tmp
+def get_matrix(pronunciations: List[Optional[Pronunciations]]) -> List[List[Optional[Tuple[Pronunciation, Weight]]]]:
+  result: List[List[Optional[Tuple[Pronunciation, Weight]]]] = []
+  for p in pronunciations:
+    if p is None:
+      if len(result) == 0:
+        result = [[None]]
       else:
-        for entry in tmp:
-          new_entry = entry + [tuple()]
-          new_tmp.append(new_entry)
-        tmp = new_tmp
+        for entry in result:
+          entry.append(None)
     else:
-      assert len(part) > 0
-      if len(tmp) == 0:
-        for entry2, weight2 in part.items():
-          new_tmp.append(list(entry2))
-          new_weights.append(weight2)
+      if len(result) == 0:
+        result = [[x] for x in p.items()]
       else:
-        for entry, weight in zip(tmp, weights):
-          for entry2, weight2 in part.items():
-            new_entry = [entry] + [list(entry2)]
-            new_weight = weight * weight2
-          new_tmp.append(new_entry)
-          new_weights.append(new_weight)
-      tmp = new_tmp
-      weights = new_weights
-  assert len(tmp) == len(weights)
-  new_tmp = (
-    symbols_join(entry, HYPHEN)
-    for entry in tmp
-  )
-  result = OrderedDict(zip(new_tmp, weights))
+        new_res = []
+        for entry in result:
+          for p2, w2 in p.items():
+            new_entry = entry + [(p2, w2)]
+            new_res.append(new_entry)
+        result = new_res
+  return result
+
+
+def get_weights(matrix: List[List[Optional[Tuple[Pronunciation, Weight]]]]) -> Generator[Optional[Weight], None, None]:
+  for row in matrix:
+    last_val = None
+    for col in row:
+      if col is None:
+        continue
+      p, w = col
+      assert p is not None
+      assert w is not None
+      if last_val is None:
+        last_val = w
+      else:
+        last_val *= w
+    yield last_val
+
+
+def get_pronunciations(matrix: List[List[Optional[Tuple[Pronunciation, Weight]]]]) -> Generator[List[Pronunciation], None, None]:
+  for row in matrix:
+    pronunciations = []
+    for col in row:
+      if col is None:
+        pronunciations.append(tuple())
+        continue
+      p, w = col
+      assert p is not None
+      assert w is not None
+      pronunciations.append(p)
+    yield pronunciations
+
+
+def merge_pronunciations(parts: List[Optional[Pronunciations]], default_weight: Weight) -> Pronunciations:
+  result = OrderedDict()
+  matrix = get_matrix(parts)
+  for pronunciation_parts, weight in zip(get_pronunciations(matrix), get_weights(matrix)):
+    joined_parts = tuple(symbols_join(pronunciation_parts, HYPHEN))
+    if weight is None:
+      weight = default_weight
+    result[joined_parts] = weight
   return result

@@ -1,17 +1,15 @@
 import re
-from typing import List, Tuple
+from typing import Generator, List, Optional, Tuple
 
 from word_to_pronunciation.types import Pronunciation, Symbol, Symbols, Word
 
 
-def symbols_join(list_of_pronunciations: List[Pronunciation], join_symbol: Symbol) -> None:
-  res = []
+def symbols_join(list_of_pronunciations: List[Pronunciation], join_symbol: Optional[Symbol]) -> Generator[Symbol, None, None]:
   for i, word in enumerate(list_of_pronunciations):
-    res.extend(word)
+    yield from word
     is_last_word = i == len(list_of_pronunciations) - 1
-    if not is_last_word:
-      res.append(join_symbol)
-  return tuple(res)
+    if not is_last_word and join_symbol is not None and len(join_symbol) > 0:
+      yield join_symbol
 
 
 def separate_symbols(word: Word, symbols: Symbols) -> Tuple[Symbols, Word, Symbols]:
