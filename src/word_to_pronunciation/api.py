@@ -34,10 +34,10 @@ def lookup_cached(word: Word, lookup: LookupMethod, cache: Dict[Word, Pronunciat
     return result
 
 
-def lookup_with_check(word: Word, method: LookupMethod) -> Pronunciations:
+def lookup_with_check(word: Word, lookup: LookupMethod) -> Pronunciations:
   logger = getLogger(__name__)
   try:
-    result = method(word)
+    result = lookup(word)
   except Exception as ex:
     logger.warning("Lookup method raised an exception!")
     logger.debug(ex)
