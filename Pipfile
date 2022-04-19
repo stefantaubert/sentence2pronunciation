@@ -3,11 +3,6 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
-[packages]
-iterable-serialization = {editable = true, path = "./../iterable-serialization"}
-tqdm = "*"
-ordered-set = "*"
-
 [dev-packages]
 word-to-pronunciation = {editable = true, path = "."}
 autopep8 = "*"
@@ -15,6 +10,9 @@ pylint = "*"
 pycodestyle = "*"
 isort = "*"
 pytest = "*"
+
+[packages]
+pronunciation-dictionary = ">=0.0.3"
 
 [requires]
 python_version = "3.9"

@@ -1,11 +1,10 @@
 from collections import OrderedDict
 from dataclasses import dataclass
-from logging import getLogger
 from typing import Generator, List, Optional, Tuple
 
-from word_to_pronunciation.types import (LookupMethod, Pronunciation,
-                                         Pronunciations, Symbol, Symbols,
-                                         Weight, Word)
+from pronunciation_dictionary import Pronunciation, Pronunciations, Weight, Word
+
+from word_to_pronunciation.types import LookupMethod
 from word_to_pronunciation.utils import separate_symbols, symbols_join
 
 HYPHEN = "-"
@@ -13,7 +12,7 @@ HYPHEN = "-"
 
 @dataclass()
 class Options():
-  trim_symbols: Symbols
+  trim_symbols: str
   split_on_hyphen: bool
   try_without_trimming: bool
   try_without_splitting: bool

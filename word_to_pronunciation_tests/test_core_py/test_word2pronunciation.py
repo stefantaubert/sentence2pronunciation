@@ -1,7 +1,8 @@
 from collections import OrderedDict
 
+from pronunciation_dictionary import Pronunciations
+
 from word_to_pronunciation.core import Options, word2pronunciation
-from word_to_pronunciation.types import Pronunciations
 
 
 def dummy_lookup(word: str) -> Pronunciations:

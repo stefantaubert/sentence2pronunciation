@@ -1,7 +1,7 @@
 import re
 from typing import Generator, List, Optional, Tuple
 
-from word_to_pronunciation.types import Pronunciation, Symbol, Symbols, Word
+from pronunciation_dictionary import Pronunciation, Symbol, Word
 
 
 def symbols_join(list_of_pronunciations: List[Pronunciation], join_symbol: Optional[Symbol]) -> Generator[Symbol, None, None]:
@@ -12,7 +12,7 @@ def symbols_join(list_of_pronunciations: List[Pronunciation], join_symbol: Optio
       yield join_symbol
 
 
-def separate_symbols(word: Word, symbols: Symbols) -> Tuple[Symbols, Word, Symbols]:
+def separate_symbols(word: Word, symbols: str) -> Tuple[str, Word, str]:
   assert isinstance(word, str)
   assert isinstance(symbols, str)
   if symbols == "":

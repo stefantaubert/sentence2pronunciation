@@ -1,13 +1,28 @@
 from collections import OrderedDict
 from functools import partial
 from logging import getLogger
-from typing import Dict
+from typing import Dict, Optional
+
+from pronunciation_dictionary import Pronunciations, Word
 
 from word_to_pronunciation.core import Options, word2pronunciation
-from word_to_pronunciation.types import LookupMethod, Pronunciations, Word
+from word_to_pronunciation.types import LookupMethod
+
+
+def __validate_options(options: Options) -> Optional[str]:
+  if not isinstance(options.trim_symbols, str):
+    raise ValueError("Property 'trim_symbols': Value needs to be of type 'str'!")
+  return None
 
 
 def get_pronunciations_from_word(word: Word, lookup: LookupMethod, options: Options) -> Pronunciations:
+  if not isinstance(word, str):
+    raise ValueError("Parameter 'word': Value needs to be of type 'str'!")
+  if not callable(lookup):
+    raise ValueError("Parameter 'lookup': Value needs to be callable!")
+  if msg := __validate_options(options):
+    raise ValueError(f"Parameter 'options': {msg}")
+
   internal_lookup_method = partial(
     lookup_with_check,
     lookup=lookup,
@@ -17,6 +32,11 @@ def get_pronunciations_from_word(word: Word, lookup: LookupMethod, options: Opti
 
 
 def get_cached_lookup(lookup: LookupMethod, cache: Dict[Word, Pronunciations]) -> LookupMethod:
+  if not callable(lookup):
+    raise ValueError("Parameter 'lookup': Value needs to be callable!")
+  if not isinstance(cache, dict):
+    raise ValueError("Parameter 'cache': Value needs to be of type 'dict'!")
+
   result = partial(
     lookup_cached,
     lookup=lookup,
@@ -52,7 +72,7 @@ def lookup_with_check(word: Word, lookup: LookupMethod) -> Pronunciations:
       logger.warning("Lookup method returned an invalid pronunciation!")
       logger.debug(result)
       return OrderedDict()
-    if not (isinstance(v, float) or isinstance(v, int)):
+    if not (isinstance(v, float) or isinstance(v, int)) and not v > 0:
       logger.warning("Lookup method returned an invalid pronunciation weight!")
       logger.debug(result)
       return OrderedDict()
