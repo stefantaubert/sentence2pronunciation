@@ -144,7 +144,7 @@ def get_pronunciations(matrix: List[List[Optional[Tuple[Pronunciation, Weight]]]
     yield pronunciations
 
 
-def merge_pronunciations(parts: List[Optional[Pronunciations]], default_weight: Weight) -> Pronunciations:
+def merge_pronunciations(parts: List[Optional[Pronunciations]], default_weight: Optional[Weight]) -> Pronunciations:
   result = OrderedDict()
   matrix = get_matrix(parts)
   for pronunciation_parts, weight in zip(get_pronunciations(matrix), get_weights(matrix)):
@@ -152,6 +152,8 @@ def merge_pronunciations(parts: List[Optional[Pronunciations]], default_weight: 
     if len(joined_parts) == 0:
       continue
     if weight is None:
+      assert default_weight is not None
+      assert default_weight > 0
       weight = default_weight
     result[joined_parts] = weight
   return result

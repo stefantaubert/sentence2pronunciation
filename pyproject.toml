@@ -47,8 +47,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/stefantaubert/word_to_pronunciation"
-Issues = "https://github.com/stefantaubert/word_to_pronunciation/issues"
+Homepage = "https://github.com/stefantaubert/sentence2pronunciation"
+Issues = "https://github.com/stefantaubert/sentence2pronunciation/issues"
 
 [project.scripts]
 dict-from-annotation-cli = "dict_from_annotation.cli:run"
@@ -82,4 +82,6 @@ indent = 2
 known_first_party = [
   "word_to_pronunciation",
 ]
-known_third_party = []
+known_third_party = [
+  "pronunciation_dictionary"
+]

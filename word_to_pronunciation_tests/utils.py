@@ -1,12 +1,11 @@
-
 import random
 import string
 
-from word_to_pronunciation.types import Pronunciation
+from pronunciation_dictionary import Pronunciation
 
 
 def random_string_generator(str_size: int, allowed_chars: str):
-  return ''.join(random.choice(allowed_chars) for x in range(str_size))
+  return ''.join(random.choice(allowed_chars) for _ in range(str_size))
 
 
 chars = string.ascii_letters + string.punctuation

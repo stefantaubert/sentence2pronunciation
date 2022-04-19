@@ -1,5 +1,9 @@
 # word-to-pronunciation
 
+[![PyPI](https://img.shields.io/pypi/v/word-to-pronunciation.svg)](https://pypi.python.org/pypi/word-to-pronunciation)
+[![PyPI](https://img.shields.io/pypi/pyversions/word-to-pronunciation.svg)](https://pypi.python.org/pypi/word-to-pronunciation)
+[![MIT](https://img.shields.io/github/license/stefantaubert/sentence2pronunciation.svg)](LICENSE)
+
 Python library to help with looking up words that contain punctuation and hyphens.
 
 ## Installation
