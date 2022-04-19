@@ -11,21 +11,20 @@ from word_to_pronunciation.types import LookupMethod
 
 def __validate_options(options: Options) -> Optional[str]:
   if not isinstance(options.trim_symbols, str):
-    raise ValueError("Property 'trim_symbols': Value needs to be of type 'str'!")
+    return "Property 'trim_symbols': Value needs to be of type 'str'!"
   if not isinstance(options.split_on_hyphen, bool):
-    raise ValueError("Property 'split_on_hyphen': Value needs to be of type 'bool'!")
+    return "Property 'split_on_hyphen': Value needs to be of type 'bool'!"
   if not isinstance(options.try_without_trimming, bool):
-    raise ValueError("Property 'try_without_trimming': Value needs to be of type 'bool'!")
+    return "Property 'try_without_trimming': Value needs to be of type 'bool'!"
   if not isinstance(options.try_without_splitting, bool):
-    raise ValueError("Property 'try_without_splitting': Value needs to be of type 'bool'!")
+    return "Property 'try_without_splitting': Value needs to be of type 'bool'!"
   if len(options.trim_symbols) > 0 and options.default_weight is None:
-    raise ValueError(
-      "Property 'default_weight': Value needs to be set if any 'trim_symbols' were defined!")
+    return "Property 'default_weight': Value needs to be set if any 'trim_symbols' were defined!"
   if options.default_weight is not None:
-    if (not isinstance(options.default_weight, float) or not isinstance(options.default_weight, int)):
-      raise ValueError("Property 'default_weight': Value needs to be of type 'int' or 'float'!")
+    if not (isinstance(options.default_weight, float) or isinstance(options.default_weight, int)):
+      return "Property 'default_weight': Value needs to be of type 'int' or 'float'!"
     if not options.default_weight > 0:
-      raise ValueError("Property 'default_weight': Value needs to be greater than zero!")
+      return "Property 'default_weight': Value needs to be greater than zero!"
 
   return None
 

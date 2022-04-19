@@ -16,7 +16,8 @@ pip install word-to-pronunciation
 
 ```python
 >>> from collections import OrderedDict
->>> from word_to_pronunciation import (Options, Pronunciations, Word, get_cached_lookup, get_pronunciations_from_word)
+>>> from pronunciation_dictionary import Pronunciations, Word
+>>> from word_to_pronunciation import Options, get_cached_lookup, get_pronunciations_from_word
 
 >>> def lookup(word: Word) -> Pronunciations:
 ...   print(f"Trying to lookup: '{word}' ...")
