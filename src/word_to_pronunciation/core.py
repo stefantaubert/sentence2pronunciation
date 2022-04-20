@@ -12,6 +12,7 @@ HYPHEN = "-"
 
 @dataclass()
 class Options():
+  # add possibility for start/end/all/both removal
   trim_symbols: str
   split_on_hyphen: bool
   try_without_trimming: bool

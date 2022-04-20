@@ -50,9 +50,6 @@ dependencies = [
 Homepage = "https://github.com/stefantaubert/sentence2pronunciation"
 Issues = "https://github.com/stefantaubert/sentence2pronunciation/issues"
 
-[project.scripts]
-dict-from-annotation-cli = "dict_from_annotation.cli:run"
-
 [tool.setuptools.packages.find]
 where = ["src"]
 include = [
